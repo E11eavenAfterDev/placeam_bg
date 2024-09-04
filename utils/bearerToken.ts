@@ -1,6 +1,6 @@
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
 
-import express, { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 
 // const User = require("../model/user");
 
@@ -13,7 +13,7 @@ exports.getCurrentUser = async (req:Request, res:Response, next:NextFunction) =>
 
 
     //expected out-put: { email: user.email, userId: user._id, status: user.account_type}
-  const payload = await jwt.verify(token, process.env.JWT_SIGN);
+  const payload = await jwt.verify(token, process.env.JWT_SIGN!);
 
 //   if(payload) {
 //     const response = await User.findById(payload.userId)

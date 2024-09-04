@@ -1,24 +1,25 @@
 
-const bodyParser = require("body-parser");
+import bodyParser from "body-parser";
 // const mongoose = require("mongoose");
 import express, { Request, Response , Express} from 'express';
 import mongoose from 'mongoose';
 
-const cors = require("cors");
+import cors from 'cors';
 
 
 
 // const General = require("./routes/general/user")
 
-const { config } = require("dotenv");
+// const { config } = require("dotenv");
+import 'dotenv/config'
+import { ErrorWithStatus } from "./types";
 
 const app: Express = express();
 
-config({ path: "./.env" });
+// config({ path: "./.env" });
 
 
 app.use(cors())
-
 
 const PORT = process.env.PORT || 5000;
 
@@ -50,11 +51,10 @@ app.get("/", (req, res, next) => {
 });
 
 
-app.use((error:any, req:Request, res:Response, ) => {
+app.use((error: ErrorWithStatus, req:Request, res:Response, ) => {
     const status = error?.statusCode || 500;
     const message = error.message;
-    const data = error.data;
-    res.status(status).json({status: "failed", message, succeeded: false ,data })
+    res.status(status).json({ message })
 })
 
 
