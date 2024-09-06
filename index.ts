@@ -50,7 +50,7 @@ app.use("/api/user", adminroute)
 /**
  * test route
  */
-app.use("/", (req, res, next) => {
+app.get("/", (req, res, next) => {
     res.status(200).send("API is running");
 });
 
