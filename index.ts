@@ -12,7 +12,9 @@ import cors from 'cors';
 
 // const { config } = require("dotenv");
 import 'dotenv/config'
-import { ErrorWithStatus } from "./types";
+import adminroute from "./routes/admin";
+import authroute from "./routes/auth";
+import userroute from "./routes/user";
 
 const app: Express = express();
 
@@ -39,7 +41,9 @@ app.use(jsonParser);
 
 // app.use(getCurrentUser)
 
-// app.use("/api/auth", Authentication)
+app.use("/api/auth", authroute)
+app.use("/api/user", userroute)
+app.use("/api/user", adminroute)
 
 // suspend account
 
@@ -51,9 +55,12 @@ app.get("/", (req, res, next) => {
 });
 
 
-app.use((error: ErrorWithStatus, req:Request, res:Response, ) => {
+app.use((error:any, req:Request, res:Response, ) => {
+  
     const status = error?.statusCode || 500;
     const message = error.message;
+
+    // console.log("from index error: ",error)
     res.status(status).json({ message })
 })
 

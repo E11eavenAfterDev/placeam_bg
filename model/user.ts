@@ -1,21 +1,9 @@
-// const mongoose = require("mongoose");
-// const { model , Schema} = mongoose;
-// const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
-// const { SchemaTypes } = require("mongoose");
 
 import { model, Schema } from "mongoose";
 import aggregatePaginate from "mongoose-aggregate-paginate-v2"
+import { IuserSchema } from "../types";
 
-interface IuserSchema {
-    avatar: string,
-      email?: string,
-      password: string,
-      fullname: string,
-      phone_number: string,
-      account_type:  "User" | 'Admin' ,
-      verify_account: boolean
 
-}
 
 const userSchema = new Schema<IuserSchema>(
   {
