@@ -1,12 +1,14 @@
 
 import bodyParser from "body-parser";
 // const mongoose = require("mongoose");
-import express, { Request, Response , Express} from 'express';
+import express, { Request, Response , Express,} from 'express';
 import mongoose from 'mongoose';
 
 import cors from 'cors';
 
-
+interface IError extends Error {
+    statusCode?: number
+}
 
 // const General = require("./routes/general/user")
 
@@ -15,6 +17,7 @@ import 'dotenv/config'
 import adminroute from "./routes/admin";
 import authroute from "./routes/auth";
 import userroute from "./routes/user";
+import { getCurrentUser } from "./utils/bearerToken";
 
 const app: Express = express();
 
@@ -39,11 +42,11 @@ const jsonParser = bodyParser.json();
 app.use(jsonParser);
 
 
-// app.use(getCurrentUser)
+app.use(getCurrentUser)
 
 app.use("/api/auth", authroute)
 app.use("/api/user", userroute)
-app.use("/api/user", adminroute)
+app.use("/api/admin", adminroute)
 
 // suspend account
 
@@ -51,16 +54,16 @@ app.use("/api/user", adminroute)
  * test route
  */
 app.get("/", (req, res, next) => {
-    res.status(200).send("API is running");
+    // res.status(200).send("API is running");
 });
 
 
-app.use((error:any, req:Request, res:Response, ) => {
-  
-    const status = error?.statusCode || 500;
+
+app.use((error:IError, req:Request, res:Response, ) => {
+    
+    const status: number = error?.statusCode || 500;
     const message = error.message;
 
-    // console.log("from index error: ",error)
     res.status(status).json({ message })
 })
 

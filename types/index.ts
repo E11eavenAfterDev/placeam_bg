@@ -1,3 +1,5 @@
+import { Request } from "express"
+
 export interface IuserSchema {
     avatar: string,
       email?: string,
@@ -7,4 +9,13 @@ export interface IuserSchema {
       account_type:  "User" | 'Admin' ,
       verify_account: boolean
 
+}
+
+
+export interface IRequest extends Request {
+  payload?: {
+    email: string,
+    userId: string,
+    status: 'User' | "Admin",
+  }
 }
