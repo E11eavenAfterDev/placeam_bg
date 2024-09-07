@@ -5,6 +5,7 @@ import { errorHandler } from "../utils/errorHandler";
 import bcrypt from "bcryptjs"
 import authToken from "../utils/token";
 import { IRequest } from "../types";
+import { responseResult } from "../utils/response";
 
 
 export const updataUser = async (req: IRequest, res: Response, next: NextFunction) => {
@@ -21,11 +22,6 @@ export const updataUser = async (req: IRequest, res: Response, next: NextFunctio
        
         if(!req.payload) return errorHandler(res, 500,"user not login in" )
 
-        const isRegisterUser = await User.findById(req?.payload.userId)
-
-        if(!isRegisterUser) return errorHandler(res, 500,"invalid credential" )
-
-
         const user = await User.findById(req?.payload.userId)
 
         if(!user) return errorHandler(res, 500,"failed" )
@@ -35,21 +31,12 @@ export const updataUser = async (req: IRequest, res: Response, next: NextFunctio
         user.phone_number = phone_number
         user.save()
 
-     
-
-     const data = await KycModel.findOne({user:user._id}).populate({ path: 'user', select: '-_id -password' });
-
-     const {token} = await authToken.createToken({email: user.email!, status: user.account_type, userId: user._id.toString()})
-
-     
-        res.status(200).json({
-            data,
-            token
-        })
-
+        await responseResult({res, userId: user._id})
 
     } catch (error:any) {
         next(error)
     }
 
 }
+
+

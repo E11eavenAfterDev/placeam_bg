@@ -11,6 +11,7 @@ interface IkycSchema {
         firstname:  string,
           lastname:  string,
         email:  string,
+        address: string
     },
     id_proof?:{ 
         document_type:  string,
@@ -30,32 +31,39 @@ const kycSchema = new Schema<IkycSchema>(
         type: Schema.Types.ObjectId,
         ref: "user",
         required: true,
-        autopopulate:{
-      select: '-password' // remove listed fields from selection
-    }
       },
 
     bio_data: {
         firstname: {
             type: String,
+            default: ""
           },
           lastname: {
             type: String,
+            default: ""
           },
         email: {
             type: String,
+            default: ""
+          },
+        address: {
+            type: String,
+            default: ""
           },
     },
 
     id_proof :{ 
         document_type: {
             type: String,
+            default: ""
           },
           document_front_view: {
             type: String,
+            default: ""
           },
           document_back_view: {
             type: String,
+            default: ""
           },
     },
     verify_kyc: {

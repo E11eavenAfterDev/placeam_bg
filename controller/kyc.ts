@@ -1,22 +1,26 @@
 import KycModel from "../model/kyc"
 import { Request, Response, NextFunction } from 'express';
+import { errorHandler } from "../utils/errorHandler";
+import { IRequest } from "../types";
 
 
-export const submitKyc = async (req: Request, res: Response, next: NextFunction) => {
+export const updateKyc = async (req: IRequest, res: Response, next: NextFunction) => {
     const {
         email,
         firstname,
         lastname,
+        address,
         document_back_view,
         document_front_view,
         document_type
     } = req.body
-    const { userId } = req.params
-
+  
 
     try {
 
-        const response = await KycModel.findByIdAndUpdate(userId, {
+        if(!req.payload) return errorHandler(res, 500,"user not login in" )
+
+        const response = await KycModel.findByIdAndUpdate(req.payload.userId, {
             id_proof: {
                 document_back_view,
                 document_front_view,
@@ -25,7 +29,8 @@ export const submitKyc = async (req: Request, res: Response, next: NextFunction)
             bio_data: {
                 email,
                 firstname,
-                lastname
+                lastname,
+                address
             },
             verify_kyc: true,
             kyc_submitted: true
@@ -33,7 +38,7 @@ export const submitKyc = async (req: Request, res: Response, next: NextFunction)
         }, { new: true });
 
 
-        if (response) return
+        if (!response) return errorHandler(res, 500,"failed" )
 
         res.status(200).json({
             data: response
@@ -46,3 +51,27 @@ export const submitKyc = async (req: Request, res: Response, next: NextFunction)
     }
 
 }
+
+
+
+export const getKyc = async (req: IRequest, res: Response, next: NextFunction) => {
+
+    try {
+
+        if(!req.payload) return errorHandler(res, 500,"user not login in" )
+
+        const response = await KycModel.findById(req.payload.userId)
+
+        res.status(200).json({
+            data: response
+        })
+
+
+    } catch (error) {
+        next(error)
+    }
+
+}
+
+
+
