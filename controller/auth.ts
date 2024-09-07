@@ -17,9 +17,6 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
 
     try {
 
-        
-
-
         const isRegisterUser = await User.findOne({email})
 
         if(isRegisterUser) return errorHandler(res, 500,"user with the email already exist." )
@@ -47,7 +44,7 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
 
      const data = await KycModel.findOne({user:user._id}).populate({ path: 'user', select: '-_id -password' });
 
-    const token  = authToken.createToken({email: user.email!, status: user.account_type, userId: user._id.toString()})
+     const {token} = await authToken.createToken({email: user.email!, status: user.account_type, userId: user._id.toString()})
 
      
         res.status(200).json({
@@ -87,8 +84,12 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
 
      const data = await KycModel.findOne({user:user._id}).populate({ path: 'user', select: '-_id -password' });
 
+
+     const {token}  = await authToken.createToken({email: user.email!, status: user.account_type, userId: user._id.toString()})
+     
         res.status(200).json({
-            data
+            data,
+            token
         })
 
 
