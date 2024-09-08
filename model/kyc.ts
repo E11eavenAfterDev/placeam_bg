@@ -5,19 +5,24 @@ import aggregatePaginate from "mongoose-aggregate-paginate-v2"
 
 
 interface IkycSchema {
-    _id?: Types.ObjectId,
-    user?: Types.ObjectId,
-    bio_data?: {
+    _id: Types.ObjectId,
+    user: Types.ObjectId,
+    bio_data: {
         firstname:  string,
           lastname:  string,
         email:  string,
         address: string
     },
-    id_proof?:{ 
+    id_proof:{ 
         document_type:  string,
           document_front_view:  string,
           document_back_view: string,
     },
+    payment_data:{
+      bank_name: string,
+      account_number: string,
+      account_name: string
+  },
     verify_kyc?:  boolean,
     kyc_submitted?:  boolean,
   
@@ -55,17 +60,19 @@ const kycSchema = new Schema<IkycSchema>(
     id_proof :{ 
         document_type: {
             type: String,
-            default: ""
           },
           document_front_view: {
             type: String,
-            default: ""
           },
           document_back_view: {
             type: String,
-            default: ""
           },
     },
+    payment_data:{
+      bank_name: String,
+      account_number: String,
+      account_name: String
+  },
     verify_kyc: {
       type: Boolean,
       default: false,

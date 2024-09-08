@@ -12,7 +12,10 @@ export const updateKyc = async (req: IRequest, res: Response, next: NextFunction
         address,
         document_back_view,
         document_front_view,
-        document_type
+        document_type,
+        bank_name,
+        account_number,
+        account_name
     } = req.body
   
 
@@ -32,6 +35,11 @@ export const updateKyc = async (req: IRequest, res: Response, next: NextFunction
                 lastname,
                 address
             },
+            payment_data:{
+                bank_name,
+                account_number,
+                account_name
+            },
             verify_kyc: true,
             kyc_submitted: true
 
@@ -41,7 +49,9 @@ export const updateKyc = async (req: IRequest, res: Response, next: NextFunction
         if (!response) return errorHandler(res, 500,"failed" )
 
         res.status(200).json({
-            data: response
+            data: {
+                kyc_submitted: response.kyc_submitted
+            }
         })
 
 

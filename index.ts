@@ -18,6 +18,7 @@ import adminroute from "./routes/admin";
 import authroute from "./routes/auth";
 import userroute from "./routes/user";
 import { getCurrentUser } from "./utils/bearerToken";
+import productroute from "./routes/product";
 
 const app: Express = express();
 
@@ -47,6 +48,7 @@ app.use(getCurrentUser)
 app.use("/api/auth", authroute)
 app.use("/api/user", userroute)
 app.use("/api/admin", adminroute)
+app.use("/api/product", productroute)
 
 // suspend account
 
