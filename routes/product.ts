@@ -10,7 +10,7 @@ productroute.post("/category",onlyAdminUser, createCategory)
 productroute.delete("/category/:id", onlyAdminUser, deleteCategory)
 // banner
 productroute.get("/banner", getBanner)
-productroute.post("/banner", createBanner)
+productroute.post("/banner", onlyAdminUser, createBanner)
 productroute.delete("/banner/:id", onlyAdminUser, deleteBanner)
 
 
