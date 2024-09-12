@@ -78,7 +78,8 @@ export const getKyc = async (req: IRequest, res: Response, next: NextFunction) =
 
 
     } catch (error) {
-        next(error)
+        const newError = new Error("Server Error")
+        next(newError)
     }
 
 }
