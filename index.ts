@@ -19,6 +19,7 @@ import authroute from "./routes/auth";
 import userroute from "./routes/user";
 import { getCurrentUser } from "./utils/bearerToken";
 import productroute from "./routes/product";
+import { IRequest } from "./types";
 
 const app: Express = express();
 
@@ -59,13 +60,10 @@ app.get("/", (req, res, next) => {
     // res.status(200).send("API is running");
 });
 
-
-
-app.use((error:IError, req:Request, res:Response, ) => {
+app.use((error:any, req:IRequest, res:Response, ) => {
     
     const status: number = error?.statusCode || 500;
     const message = error.message;
-
     res.status(status).json({ message })
 })
 
