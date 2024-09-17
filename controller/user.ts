@@ -15,10 +15,7 @@ export const updataUser = async (req: IRequest, res: Response, next: NextFunctio
         phone_number
     } = req.body
 
-   
-
     try {
-
        
         if(!req.payload) return errorHandler(res, 500,"user not login in" )
 
