@@ -1,18 +1,11 @@
 
 import bodyParser from "body-parser";
-// const mongoose = require("mongoose");
-import express, { Request, Response , Express,} from 'express';
+import { v2 as cloudinary } from 'cloudinary';
+import express, { Response , Express,} from 'express';
 import mongoose from 'mongoose';
 
 import cors from 'cors';
 
-interface IError extends Error {
-    statusCode?: number
-}
-
-// const General = require("./routes/general/user")
-
-// const { config } = require("dotenv");
 import 'dotenv/config'
 import adminroute from "./routes/admin";
 import authroute from "./routes/auth";
@@ -22,8 +15,6 @@ import productroute from "./routes/product";
 import { IRequest } from "./types";
 
 const app: Express = express();
-
-// config({ path: "./.env" });
 
 
 app.use(cors())
@@ -45,6 +36,14 @@ app.use(jsonParser);
 
 
 app.use(getCurrentUser)
+
+// cloudinary
+cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_secret: process.env.API_SECRET,
+    api_key:  process.env.API_KEY
+})
+
 
 app.use("/api/auth", authroute)
 app.use("/api/user", userroute)
