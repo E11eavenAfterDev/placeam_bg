@@ -1,7 +1,7 @@
 
 import bodyParser from "body-parser";
 import { v2 as cloudinary } from 'cloudinary';
-import express, { Response , Express,} from 'express';
+import express, { Response , Express, NextFunction,} from 'express';
 import mongoose from 'mongoose';
 
 import cors from 'cors';
@@ -30,10 +30,16 @@ const currentUrl = liveUrl || prodUrl;
 const dbUrl = process.env.databaseUrl || process.env.MONGODB_URI;
 
 // create application/json parser
-const jsonParser = bodyParser.json();
 
-app.use(jsonParser);
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+// const jsonParser = bodyParser.json();
 
+app.use(bodyParser.json());
+
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: true }));
 
 app.use(getCurrentUser)
 
@@ -59,11 +65,10 @@ app.get("/", (req, res, next) => {
     // res.status(200).send("API is running");
 });
 
-app.use((error:any, req:IRequest, res:Response, ) => {
-    
-    const status: number = error?.statusCode || 500;
+app.use((error:any, req:IRequest, res:Response, next: NextFunction) => {
+
     const message = error.message;
-    res.status(status).json({ message })
+    res.json({ message })
 })
 
 

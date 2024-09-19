@@ -1,6 +1,7 @@
 import express from "express"
 import { onlyAdminUser, onlyLoginUser } from "../utils/helper";
 import { deleteCategory, getCategory , createCategory, createBanner, deleteBanner, getBanner, createProduct, deleteProduct, getProduct, getProducts} from "../controller/product";
+import { multipleupload } from "../middleware/multer";
 
 const productroute = express.Router()
 
@@ -15,9 +16,9 @@ productroute.delete("/banner/:id", onlyAdminUser, deleteBanner)
 
 
 // product
-productroute.delete("/:prodId", deleteProduct)
+productroute.post("/create", onlyLoginUser, multipleupload, createProduct)
+productroute.delete("/:prodId", onlyLoginUser, deleteProduct)
 productroute.get("/:prodId", getProduct)
-productroute.post("/", createProduct)
 productroute.get("/", getProducts)
 
 

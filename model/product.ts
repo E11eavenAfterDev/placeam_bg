@@ -2,14 +2,11 @@
 import { model, Schema , Types} from "mongoose";
 import aggregatePaginate from "mongoose-aggregate-paginate-v2"
 
-
-
 interface IproductSchema {
 
     user: Types.ObjectId,
     product_type: "sell" | "rental",
       category: string,
-      notify: boolean,
       status: "Available" | "Sold" | "Not Available",
       isNegotiable: boolean,
      product_detail: {
@@ -17,7 +14,7 @@ interface IproductSchema {
         size: number,
         description: string,
         price: number,
-        images: []
+        // images: []
      },
      pickup_detail: {
         date: Date,
@@ -25,12 +22,10 @@ interface IproductSchema {
         latitude: number,
         longtitude: number,
         received_date: Date
-     },
-     sold_price: number
- 
-    
-  
+     }
+    //  sold_price: number
 }
+
 
 
 const productSchema = new Schema<IproductSchema>(
@@ -40,49 +35,69 @@ const productSchema = new Schema<IproductSchema>(
         ref: "user",
         required: true,
       },
-      product_type: {
-        type: String,
-        enum: ["sell", "rental"]
-
+      category: {
+        type: String
       },
-      category:String,
-      notify: Boolean,
       status: {
         type: String,
         default: "Available",
         enum: ["Available", "Sold", "Not Available"]
       },
-      isNegotiable: Boolean,
+      isNegotiable: {
+        type: Boolean
+      },
      product_detail: {
-        name: String,
-        size: Number,
-        description: String,
+        name: {
+          type: String
+        },
+        size: {
+          type: Number
+        },
+        description: {
+          type: String
+        },
         price: { 
             type: Number,
-            required: true,
-            min: 0.01,
+            // required: true,
+            // min: 0.01,
           },
         images: []
      },
-     pickup_detail: {
-        date: Date,
-        location: String,
-        latitude: Number,
-        longtitude: Number,
-        received_date: Date
-     },
-     sold_price: { 
-              type: Number,
-              min: 0.01,
-            },
- 
-  
-  },
-  {
-    timestamps: true,
   }
 );
 
+
+
+const rentalSchema = new Schema({
+//  ...productSchema,
+  // product_type: {
+  //   type: String,
+  //   default: "rental"
+  // },
+  pickup_detail: {
+    date: Date,
+    location: String,
+    latitude: Number,
+    longtitude: Number
+ },
+
+
+})
+
+
+interface IsellingProductSchema {
+  product_type: string,
+  product: IproductSchema
+}
+ 
+
+const sellingProductSchema = new Schema<IsellingProductSchema>({
+  product: productSchema,
+  product_type: {
+    type: String,
+    default: "sell"
+  },
+})
 
 
 productSchema.plugin(aggregatePaginate);
@@ -91,8 +106,29 @@ productSchema.index({'$**': 'text' }); // Full-text search index for name
 productSchema.index({ "product_detail.price": 1 }); // Ascending index for price filtering
 
 
-const Product = model<IproductSchema>('product', productSchema);
-export default Product
+// export const Product = model<IproductSchema>('Product', productSchema);
+export const Rental = model<IproductSchema>('Rental', rentalSchema);
+export const SellingProduct = model<IsellingProductSchema>('SellingProduct', sellingProductSchema);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

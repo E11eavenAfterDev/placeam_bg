@@ -1,14 +1,12 @@
-import KycModel from "../model/kyc"
-import User from "../model/user"
+
 import { Request, Response, NextFunction } from 'express';
 import { errorHandler } from "../utils/errorHandler";
-import bcrypt from "bcryptjs"
-import authToken from "../utils/token";
 import { IRequest } from "../types";
-import { responseResult } from "../utils/response";
 import Category from "../model/productcategory";
 import Banner from "../model/banner";
-import Product from "../model/product";
+import { SellingProduct } from "../model";
+import { getDataUri } from '../utils/features';
+import { v2 as cloudinary } from 'cloudinary';
 
 
 export const getCategory = async (req: IRequest, res: Response, next: NextFunction) => {
@@ -112,19 +110,77 @@ export const getBanner = async (req: IRequest, res: Response, next: NextFunction
 }
 
 // product
-
 export const createProduct = async (req: IRequest, res: Response, next: NextFunction) => {
     const {
-        avatar,
-    } = req.body
+        isNegotiable,
+        category,
+        name,
+        size,
+        description,
+        price
+    } = req.body;
+
+    const files:any = req.files
+    const productimages = files.images
+
 
     try {
 
-        await Product.create({
-            
+        // if(isNegotiable == undefined || !category || !name || !size || !description || !price) return errorHandler(res, 401, "All fields is required")
+
+       
+        let images = [];
+
+
+        for (const image in productimages){
+
+            const file =  getDataUri(productimages[image])
+          const result = await cloudinary.uploader.upload(file.content!, {folder: "placeAmUserProductPhotos", overwrite: true});
+          
+          const url =  cloudinary.url(result.public_id, {
+            transformation: [
+                {
+                    quality: "auto",
+                    fetch_format: "auto",
+                },
+                {
+                    width: 500,
+                    height: 500,
+                    crop: "fill",
+                    gravity: "auto"
+                }
+            ]
+          })
+          
+          images.push({
+            url,
+            public: result.public_id
+          })
+        }
+       
+       
+       
+       
+       
+       
+       
+        const response = await SellingProduct.create({
+        product: {
+            user:  req.payload?.userId,
+              isNegotiable,
+              category,
+             product_detail: {
+                name,
+                size,
+                description,
+                price,
+                images
+             },
+        }
+
          })
 
-         res.status(200).json({message: "success"})
+         res.status(200).json({message: "success", response})
        
 
     } catch (error:any) {
@@ -133,10 +189,11 @@ export const createProduct = async (req: IRequest, res: Response, next: NextFunc
 
 }
 
+
 export const deleteProduct = async (req: IRequest, res: Response, next: NextFunction) => {
 
     try {
-        await Product.findByIdAndDelete(req.params.prodId)
+        await SellingProduct.findByIdAndDelete(req.params.prodId)
 
          res.status(200).json({message: "success"})
        
@@ -151,7 +208,7 @@ export const getProducts = async (req: IRequest, res: Response, next: NextFuncti
   
     try {
         
-         const data = await Product.find()
+         const data = await SellingProduct.find()
          res.status(200).json({data})
 
     } catch (error:any) {
@@ -165,7 +222,7 @@ export const getProduct = async (req: IRequest, res: Response, next: NextFunctio
   
     try {
         
-         const data = await Product.findById(req.params.prodId)
+         const data = await SellingProduct.findById(req.params.prodId)
          res.status(200).json({data})
 
     } catch (error:any) {
