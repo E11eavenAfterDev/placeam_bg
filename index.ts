@@ -31,16 +31,9 @@ const currentUrl = liveUrl || prodUrl;
 const dbUrl = process.env.databaseUrl || process.env.MONGODB_URI;
 
 // create application/json parser
+app.use(bodyParser.json({ limit: "200mb" }));
+app.use(bodyParser.urlencoded({ limit: "200mb",  extended: true, parameterLimit: 1000000 }));
 
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
-// const jsonParser = bodyParser.json();
-
-app.use(bodyParser.json());
-
-// app.use(express.json());
-// app.use(express.urlencoded({ extended: true }));
 
 app.use(getCurrentUser)
 
