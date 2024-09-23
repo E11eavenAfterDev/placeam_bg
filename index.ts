@@ -13,6 +13,7 @@ import userroute from "./routes/user";
 import { getCurrentUser } from "./utils/bearerToken";
 import productroute from "./routes/product";
 import { IRequest } from "./types";
+import rentalroute from "./routes/rental";
 
 const app: Express = express();
 
@@ -55,6 +56,7 @@ app.use("/api/auth", authroute)
 app.use("/api/user", userroute)
 app.use("/api/admin", adminroute)
 app.use("/api/product", productroute)
+app.use("/api/rental", rentalroute)
 
 // suspend account
 
