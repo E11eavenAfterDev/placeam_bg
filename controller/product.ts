@@ -237,13 +237,14 @@ export const createBid = async (req: IRequest, res: Response, next: NextFunction
      if(!product) return errorHandler(res, 500,"Item not found" );
      let item: any = product.user;
 
-     
+
         await Bid.create({
             amount,
             bidder: req.payload?.userId,
             user: product.user,
             product: prodId,
-            message: `${item.fullname} has offered to pay ₦${amount} instead of ₦${product.product_detail.price} for the ${product.product_detail.name} you uploaded for sale`
+            bidBy: item.fullname,
+            message: `has offered to pay ₦${amount} instead of ₦${product.product_detail.price} for the ${product.product_detail.name} you uploaded for sale`
         })
 
    
