@@ -2,8 +2,6 @@
 import { Response, NextFunction } from 'express';
 import { errorHandler } from "../utils/errorHandler";
 import { IRequest } from "../types";
-import Category from "../model/productcategory";
-import Banner from "../model/banner";
 import { getDataUri } from '../utils/features';
 import { v2 as cloudinary } from 'cloudinary';
 import { Product , Pickup} from '../model';
@@ -106,7 +104,7 @@ export const createRental = async (req: IRequest, res: Response, next: NextFunct
 
 export const getRentalProducts = async (req: IRequest, res: Response, next: NextFunction) => {
     try {
-         const data = await Product.find({productType: "rental", status: "Available"})
+         const data = await Product.find({productType: "rental", status: "Available"}).populate("user", "avatar fullname")
          res.status(200).json({data})
 
     } catch (error:any) {

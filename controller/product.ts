@@ -199,7 +199,7 @@ export const getProducts = async (req: IRequest, res: Response, next: NextFuncti
   
     try {
         
-         const data = await Product.find({productType: "dashbroad", status: "Available"})
+         const data = await Product.find({productType: "dashbroad", status: "Available"}).populate("user", "avatar fullname")
          res.status(200).json({data})
 
     } catch (error:any) {

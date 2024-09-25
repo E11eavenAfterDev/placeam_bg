@@ -132,7 +132,7 @@ export const userProductSold = async (req: IRequest, res: Response, next: NextFu
    
   try {
     if(!req.payload) return errorHandler(res, 500,"user not login in" );
-    const data = await Product.find({user: req?.payload.userId, status: "Sold"})
+    const data = await Product.find({user: req?.payload.userId, status: "Sold"}).populate("user", "avatar fullname")
 
     res.status(200).json({data})
 
@@ -148,7 +148,7 @@ export const userProductStock = async (req: IRequest, res: Response, next: NextF
    
   try {
     if(!req.payload) return errorHandler(res, 500,"user not login in" );
-    const data = await Product.find({user: req?.payload.userId, status: "Available"})
+    const data = await Product.find({user: req?.payload.userId, status: "Available"}).populate("user", "avatar fullname")
 
     res.status(200).json({data})
 
