@@ -8,7 +8,8 @@ interface IbidSchema {
     bidder: Types.ObjectId,
     product: Types.ObjectId,
     bidStatus: "Approved" | "Rejected",
-    amount: number
+    amount: number,
+    message: string
 }
 
 
@@ -33,7 +34,8 @@ const bidSchema = new Schema<IbidSchema>(
         type: String,
         enum: ["Approved", "Rejected"]
       },
-      amount: Number
+      amount: Number,
+      message: String
   },
   {
     timestamps: true,
