@@ -4,8 +4,8 @@ import { Response, NextFunction } from 'express';
 import { errorHandler } from "../utils/errorHandler";
 import { IRequest } from "../types";
 import { responseResult } from "../utils/response";
-import Donation from "../model/donation";
 import { getDataUri } from "../utils/features";
+import { Product , Notification, Bid} from '../model';
 
 
 export const updateUser = async (req: IRequest, res: Response, next: NextFunction) => {
@@ -96,31 +96,45 @@ export const updateUserAvatar = async (req: IRequest, res: Response, next: NextF
 }
 
 
-export const donateItem = async (req: IRequest, res: Response, next: NextFunction) => {
-    const {
-        category,
-        latitude,
-            longtitude,
-            pickup_date,
-            pickup_location
-    } = req.body
 
+
+export const userNotifications = async (req: IRequest, res: Response, next: NextFunction) => {
+   
     try {
-       
-        if(!req.payload) return errorHandler(res, 500,"user not login in" )
+      if(!req.payload) return errorHandler(res, 500,"user not login in" );
+      const data = await Notification.find({user: req?.payload.userId})
+  
+      res.status(200).json({data})
+  
+      } catch (error:any) {
+          next(error)
+      }
+  
+  }
+  
+export const userBid = async (req: IRequest, res: Response, next: NextFunction) => {
+   
+    try {
+      if(!req.payload) return errorHandler(res, 500,"user not login in" );
+      const data = await Bid.find({user: req?.payload.userId})
+  
+      res.status(200).json({data})
+  
+      } catch (error:any) {
+          next(error)
+      }
+  
+  }
 
-        const donation = await Donation.create({
-            user: req?.payload.userId,
-            category,
-            latitude,
-            longtitude,
-            pickup_date,
-            pickup_location
-        })
 
-        if(!donation) return errorHandler(res, 500,"failed" )
 
-            res.status(200).json({message: "Successful"})
+export const userProductSold = async (req: IRequest, res: Response, next: NextFunction) => {
+   
+  try {
+    if(!req.payload) return errorHandler(res, 500,"user not login in" );
+    const data = await Product.find({user: req?.payload.userId, status: "Sold"})
+
+    res.status(200).json({data})
 
     } catch (error:any) {
         next(error)
@@ -129,25 +143,17 @@ export const donateItem = async (req: IRequest, res: Response, next: NextFunctio
 }
 
 
-export const getdonateUserItem = async (req: IRequest, res: Response, next: NextFunction) => {
 
-    try {
-       
-        if(!req.payload) return errorHandler(res, 500,"user not login in" )
+export const userProductStock = async (req: IRequest, res: Response, next: NextFunction) => {
+   
+  try {
+    if(!req.payload) return errorHandler(res, 500,"user not login in" );
+    const data = await Product.find({user: req?.payload.userId, status: "Available"})
 
-        const data = await Donation.find({user: req?.payload.userId}).sort("-updateAt");;
-        
-        if(!data) return errorHandler(res, 500,"failed" )
-
-            res.status(200).json({data})
+    res.status(200).json({data})
 
     } catch (error:any) {
         next(error)
     }
-
 }
-
-
-
-
 

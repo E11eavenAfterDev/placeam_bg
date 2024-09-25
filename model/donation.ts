@@ -7,6 +7,7 @@ interface IdonationSchema {
     pickup_location: string,
     longtitude: number,
     latitude: number,
+    isRecieved: boolean
 }
 
 
@@ -42,6 +43,10 @@ const donationSchema = new Schema<IdonationSchema>({
     required: true,
     trim: true,
   },
+  isRecieved: {
+    type: Boolean,
+    default: false
+  }
 
  
 });

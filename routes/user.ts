@@ -1,5 +1,5 @@
 import express from "express"
-import { donateItem, getdonateUserItem, updateUser, updateUserAvatar } from "../controller/user";
+import { updateUser, updateUserAvatar, userBid, userNotifications, userProductStock , userProductSold} from "../controller/user";
 import { onlyLoginUser } from "../utils/helper";
 import { getKyc, updateKyc } from "../controller/kyc";
 import { multipleupload, singleupload } from "../middleware/multer";
@@ -11,9 +11,13 @@ userroute.patch("/update", onlyLoginUser, updateUser)
 userroute.get("/kyc", onlyLoginUser, getKyc)
 userroute.patch("/kyc", onlyLoginUser, multipleupload, updateKyc)
 userroute.patch("/avatar", onlyLoginUser, singleupload, updateUserAvatar)
-userroute.post("/donation", onlyLoginUser, donateItem)
-userroute.get("/donation", onlyLoginUser, getdonateUserItem)
+userroute.get("/notify", onlyLoginUser, singleupload, userNotifications)
+userroute.get("/bid", onlyLoginUser, singleupload, userBid)
 
+// product
+// userroute.get("/stock", onlyLoginUser, userProductStock)
+userroute.get("/stock", onlyLoginUser, userProductStock)
+userroute.get("/sold", onlyLoginUser, userProductSold)
 
 
 

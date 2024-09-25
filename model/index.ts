@@ -1,4 +1,7 @@
-import { Rental, SellingProduct } from "./product";
+import Bid from "./bid";
+import Notification from "./notification";
+import Pickup from "./pickup";
+import {  Product } from "./product";
 
 
-export {Rental, SellingProduct}
+export { Product, Pickup, Bid, Notification}

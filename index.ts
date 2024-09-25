@@ -14,6 +14,7 @@ import { getCurrentUser } from "./utils/bearerToken";
 import productroute from "./routes/product";
 import { IRequest } from "./types";
 import rentalroute from "./routes/rental";
+import donationroute from "./routes/donation";
 
 const app: Express = express();
 
@@ -50,6 +51,7 @@ app.use("/api/user", userroute)
 app.use("/api/admin", adminroute)
 app.use("/api/product", productroute)
 app.use("/api/rental", rentalroute)
+app.use("/api/donation", donationroute)
 
 // suspend account
 

@@ -3,27 +3,19 @@ import { model, Schema , Types} from "mongoose";
 import aggregatePaginate from "mongoose-aggregate-paginate-v2"
 
 interface IproductSchema {
-
     user: Types.ObjectId,
-    product_type: "sell" | "rental",
       category: string,
-      status: "Available" | "Sold" | "Not Available",
+      status: "Available" | "Sold" | "unAvailable",
       isNegotiable: boolean,
      product_detail: {
         name: string,
         size: number,
         description: string,
         price: number,
-        // images: []
+        images: []
      },
-     pickup_detail: {
-        date: Date,
-        location: string,
-        latitude: number,
-        longtitude: number,
-        received_date: Date
-     }
-    //  sold_price: number
+     productType: "dashbroad" | "rental",
+     rentalPeriod: "day" | "week" | "month" | "year"
 }
 
 
@@ -35,69 +27,30 @@ const productSchema = new Schema<IproductSchema>(
         ref: "user",
         required: true,
       },
-      category: {
-        type: String
-      },
+      category: String,
       status: {
         type: String,
         default: "Available",
-        enum: ["Available", "Sold", "Not Available"]
+        enum: ["Available", "Sold", "unAvailable"]
       },
-      isNegotiable: {
-        type: Boolean
-      },
+      isNegotiable: Boolean,
      product_detail: {
-        name: {
-          type: String
-        },
-        size: {
-          type: Number
-        },
-        description: {
-          type: String
-        },
-        price: { 
-            type: Number,
-            // required: true,
-            // min: 0.01,
-          },
+        name: String,
+        size:  Number,
+        description: String,
+        price: Number,
         images: []
      },
-  }
+     productType: {
+      type: String,
+      enum:["dashbroad", "instore", "rental"]
+     },
+     rentalPeriod: {
+      type: String,
+      enum:["day", "week", "month", "year"]
+     }
+  },{timestamps: true, autoIndex: false}
 );
-
-
-
-const rentalSchema = new Schema({
-//  ...productSchema,
-  // product_type: {
-  //   type: String,
-  //   default: "rental"
-  // },
-  pickup_detail: {
-    date: Date,
-    location: String,
-    latitude: Number,
-    longtitude: Number
- },
-
-
-})
-
-
-interface IsellingProductSchema {
-  product_type: string,
-  product: IproductSchema
-}
- 
-
-const sellingProductSchema = new Schema<IsellingProductSchema>({
-  product: productSchema,
-  product_type: {
-    type: String,
-    default: "sell"
-  },
-})
 
 
 productSchema.plugin(aggregatePaginate);
@@ -105,13 +58,7 @@ productSchema.plugin(aggregatePaginate);
 productSchema.index({'$**': 'text' }); // Full-text search index for name
 productSchema.index({ "product_detail.price": 1 }); // Ascending index for price filtering
 
-
-// export const Product = model<IproductSchema>('Product', productSchema);
-export const Rental = model<IproductSchema>('Rental', rentalSchema);
-export const SellingProduct = model<IsellingProductSchema>('SellingProduct', sellingProductSchema);
-
-
-
+export const Product = model<IproductSchema>('Product', productSchema);
 
 
 

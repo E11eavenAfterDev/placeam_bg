@@ -7,15 +7,21 @@ import aggregatePaginate from "mongoose-aggregate-paginate-v2"
 interface IpickupSchema {
 
     user: Types.ObjectId,
+    dispatch: Types.ObjectId,
     product: Types.ObjectId,
      pickup_detail: {
-        date: Date,
-        location: string,
+        pickup_date: Date,
+        pickup_location: string,
         latitude: number,
         longtitude: number,
         received_date: Date
      },
-     sold_price: number  
+     productStatus: "picked" | "returned"
+     dispatch_detail: {
+      pickupDate: Date,
+      productVerify: boolean
+    },
+
 }
 
 
@@ -31,18 +37,28 @@ const pickupSchema = new Schema<IpickupSchema>(
         ref: "user",
         required: true,
       },
-
+      dispatch: {
+        type: Schema.Types.ObjectId,
+        ref: "user",
+      },
+      productStatus: {
+        type: String,
+        enum: ["picked", "returned"]
+      },
+      dispatch_detail: {
+        pickupDate: Date,
+        productVerify: {
+          type: Boolean,
+          default: false
+        }
+      },
       pickup_detail: {
-        date: Date,
-        location: String,
+        pickupDate: Date,
+        pickup_location: String,
         latitude: Number,
         longtitude: Number,
         received_date: Date
      },
-     sold_price: { 
-              type: Number,
-              min: 0.01,
-            },
     
   },
   {
