@@ -102,7 +102,7 @@ export const userNotifications = async (req: IRequest, res: Response, next: Next
    
     try {
       if(!req.payload) return errorHandler(res, 500,"user not login in" );
-      const data = await Notification.find({user: req?.payload.userId})
+      const data = await Notification.find({user: req?.payload.userId}).sort("-createdAt")
   
       res.status(200).json({data})
   
@@ -116,7 +116,7 @@ export const userBid = async (req: IRequest, res: Response, next: NextFunction) 
    
     try {
       if(!req.payload) return errorHandler(res, 500,"user not login in" );
-      const data = await Bid.find({user: req?.payload.userId})
+      const data = await Bid.find({user: req?.payload.userId}).sort("-createdAt")
   
       res.status(200).json({data})
   
@@ -132,7 +132,7 @@ export const userProductSold = async (req: IRequest, res: Response, next: NextFu
    
   try {
     if(!req.payload) return errorHandler(res, 500,"user not login in" );
-    const data = await Product.find({user: req?.payload.userId, status: "Sold"}).populate("user", "avatar fullname")
+    const data = await Product.find({user: req?.payload.userId, status: "Sold"}).populate("user", "avatar fullname").sort("-createdAt")
 
     res.status(200).json({data})
 
@@ -148,7 +148,7 @@ export const userProductStock = async (req: IRequest, res: Response, next: NextF
    
   try {
     if(!req.payload) return errorHandler(res, 500,"user not login in" );
-    const data = await Product.find({user: req?.payload.userId, status: "Available"}).populate("user", "avatar fullname")
+    const data = await Product.find({user: req?.payload.userId, status: "Available"}).populate("user", "avatar fullname").sort("-createdAt")
 
     res.status(200).json({data})
 
