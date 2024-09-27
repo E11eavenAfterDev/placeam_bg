@@ -296,8 +296,8 @@ if(req.body.bidStatus == "Approved") {
     product.product_detail.price = bid.amount
 
     product.save()
-    bid.bidStatus = "Approved"
-    bid.save()
+    // bid.bidStatus = "Approved"
+    // bid.save()
 
       await Notification.create({
             user: bid?.bidder,
@@ -309,14 +309,15 @@ if(req.body.bidStatus == "Approved") {
 
 if( req.body.bidStatus == "Rejected") {
 
-    bid.bidStatus = "Rejected"
-    bid.save()
+    // bid.bidStatus = "Rejected"
+    // bid.save()
     await Notification.create({
         user: bid?.bidder,
         message: `Sorry ₦${bid.amount} was not accepted for ${product.product_detail.name}.`
     })
 }
 
+         await Bid.findByIdAndDelete(bidId)
 
          res.status(200).json({message: "success", })
        
