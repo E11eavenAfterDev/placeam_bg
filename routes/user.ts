@@ -1,5 +1,5 @@
 import express from "express"
-import { updateUser, updateUserAvatar, userBid, userNotifications, userProductStock , userProductSold} from "../controller/user";
+import { updateUser, updateUserAvatar, userBid, userNotifications, userProductStock , userProductSold, userTransaction, userBuyProducts} from "../controller/user";
 import { onlyLoginUser } from "../utils/helper";
 import { getKyc, updateKyc } from "../controller/kyc";
 import { multipleupload, singleupload } from "../middleware/multer";
@@ -19,6 +19,8 @@ userroute.get("/bid", onlyLoginUser, singleupload, userBid)
 userroute.get("/stock", onlyLoginUser, userProductStock)
 userroute.get("/sold", onlyLoginUser, userProductSold)
 
-
+// transaction
+userroute.post("/buy", onlyLoginUser, userBuyProducts)
+userroute.get("/transact", onlyLoginUser, userTransaction)
 
 export default userroute;

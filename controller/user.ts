@@ -5,7 +5,7 @@ import { errorHandler } from "../utils/errorHandler";
 import { IRequest } from "../types";
 import { responseResult } from "../utils/response";
 import { getDataUri } from "../utils/features";
-import { Product , Notification, Bid} from '../model';
+import { Product , Notification, Bid, Transaction} from '../model';
 
 
 export const updateUser = async (req: IRequest, res: Response, next: NextFunction) => {
@@ -156,4 +156,67 @@ export const userProductStock = async (req: IRequest, res: Response, next: NextF
         next(error)
     }
 }
+
+
+
+
+
+// transaction
+export const userBuyProducts = async (req: IRequest, res: Response, next: NextFunction) => {
+    const {deliveryFee, orderId, product, deliveryPin} = req.body
+   
+    try {
+      if(!req.payload) return errorHandler(res, 500,"user not login in" );
+
+     const data =  new Transaction({
+        user: req?.payload.userId,
+        transactionStatus: "Received",
+        deliveryFee,
+        orderId,
+        product,
+        deliveryPin
+      });
+
+      data.save();
+
+
+      for(const productId of data.product){
+        const product = await Product.findById(productId);
+
+        if(product) {
+            product.status = "Sold";
+            product.save()
+        }
+      }
+
+
+      if(!data) return errorHandler(res, 500,"failed" );
+
+      res.status(200).json({message: "success"});
+  
+      } catch (error:any) {
+          next(error)
+      }
+  }
+  
+
+// transaction
+export const userTransaction = async (req: IRequest, res: Response, next: NextFunction) => {
+   
+    try {
+      if(!req.payload) return errorHandler(res, 500,"user not login in" );
+
+     const data =  await Transaction.find({user:req?.payload.userId}).populate("product")
+
+
+      if(!data) return errorHandler(res, 500,"failed" );
+
+      res.status(200).json({data});
+  
+      } catch (error:any) {
+          next(error)
+      }
+  }
+  
+
 
